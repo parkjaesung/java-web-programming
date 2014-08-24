@@ -10,7 +10,7 @@
 	</listener>	
 
 	<listener>
-		<listener-class>next.support.init.JwpContextLoaderListender</listener-class>
+		<listener-class>next.support.init.QnaContextLoaderListender</listener-class>
 	</listener>
 	
 	<servlet>
