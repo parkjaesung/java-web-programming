@@ -7,16 +7,15 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import next.model.Answer;
-import next.support.db.ConnectionManager;
 import core.jdbc.JdbcTemplate;
 import core.jdbc.PreparedStatementSetter;
 import core.jdbc.RowMapper;
 
 public class AnswerDao {
-	private JdbcTemplate jdbcTempate;
+	private JdbcTemplate jdbcTemplate;
 
-	public AnswerDao() {
-		jdbcTempate = new JdbcTemplate(ConnectionManager.getConnection());
+	public void setJdbcTemplate(JdbcTemplate jdbcTempate) {
+		this.jdbcTemplate = jdbcTempate;
 	}
 
 	public void insert(final Answer answer) throws SQLException {
@@ -32,10 +31,10 @@ public class AnswerDao {
 			}
 		};
 		
-		jdbcTempate.update(sql, pss);
+		jdbcTemplate.update(sql, pss);
 
 		String countplussql = "update QUESTIONS set countOfComment = countOfComment + 1 where questionId = ?";
-		jdbcTempate.update(countplussql, answer.getQuestionId());
+		jdbcTemplate.update(countplussql, answer.getQuestionId());
 	}
 
 	public List<Answer> findAllByQuestionId(final long questionId)
@@ -61,6 +60,6 @@ public class AnswerDao {
 			
 		};
 
-		return jdbcTempate.query(sql, rowMapper, pss);
+		return jdbcTemplate.query(sql, rowMapper, pss);
 	}
 }
