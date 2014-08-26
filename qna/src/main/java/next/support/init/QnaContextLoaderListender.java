@@ -3,24 +3,21 @@ package next.support.init;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import next.support.db.ConnectionManager;
+import next.config.Config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class QnaContextLoaderListender implements ServletContextListener {
 	private static final Logger logger = LoggerFactory.getLogger(QnaContextLoaderListender.class);
 	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-		populator.addScript(new ClassPathResource("qna.sql"));
-		DatabasePopulatorUtils.execute(populator, ConnectionManager.getDataSource());
-		
-		logger.info("Initialized Database Schema!");
+		try (AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(Config.class)) {
+			
+		}
+		logger.info("Initialized Application Context!");
 	}
 
 	@Override
