@@ -3,6 +3,7 @@ package next.config;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+import next.dao.AnswerDao;
 import next.dao.QuestionDao;
 import next.support.init.DatabaseInitializer;
 
@@ -45,5 +46,12 @@ public class Config {
 		QuestionDao questionDao = new QuestionDao();
 		questionDao.setJdbcTemplate(jdbcTemplate());
 		return questionDao;
+	}
+	
+	@Bean
+	public AnswerDao answerDao() {
+		AnswerDao answerDao = new AnswerDao();
+		answerDao.setJdbcTemplate(jdbcTemplate());
+		return answerDao;
 	}
 }
