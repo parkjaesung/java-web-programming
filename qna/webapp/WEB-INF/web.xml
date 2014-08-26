@@ -46,12 +46,12 @@
 
 	<servlet>
 		<display-name>SpringMvcController</display-name>
-		<servlet-name>SpringMvcController</servlet-name>
+		<servlet-name>slipp</servlet-name>
 		<servlet-class>core.mvc.SpringMvcController</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>SpringMvcController</servlet-name>
+		<servlet-name>slipp</servlet-name>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
 	
