@@ -15,14 +15,18 @@ public class ShowController implements Controller {
 	private QuestionDao questionDao = new QuestionDao();
 	private AnswerDao answerDao = new AnswerDao();
 	
+	
 	@Override
 	public String execute(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		long questionId = Long.parseLong(request.getParameter("questionId"));
-		Question question = questionDao.findById(questionId);
-		List<Answer> answers = answerDao.findAllByQuestionId(questionId);
+		Question question;
+		List<Answer> answers;
+		question = questionDao.findById(questionId);
+		answers = answerDao.findAllByQuestionId(questionId);
 		request.setAttribute("question", question);
 		request.setAttribute("answers", answers);
+		
 		return "show.jsp";
 	}
 }

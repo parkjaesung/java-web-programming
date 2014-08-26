@@ -1,4 +1,4 @@
-package next.controller;
+package next.api.controller;
 
 import java.util.List;
 
@@ -9,16 +9,16 @@ import next.dao.QuestionDao;
 import next.model.Question;
 import core.mvc.Controller;
 
-public class ListController implements Controller {
+public class ApiListController implements Controller {
 	private QuestionDao questionDao = new QuestionDao();
-
+	
+	
 	@Override
-	public String execute(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public Object execute(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		List<Question> questions;
 		questions = questionDao.findAll();
-
-		request.setAttribute("questions", questions);
-		return "list.jsp";
+		
+		return questions;
 	}
 }

@@ -1,77 +1,66 @@
 package next.dao;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import next.model.Answer;
 import next.support.db.ConnectionManager;
+import core.jdbc.JdbcTemplate;
+import core.jdbc.PreparedStatementSetter;
+import core.jdbc.RowMapper;
 
 public class AnswerDao {
+	private JdbcTemplate jdbcTempate;
 
-	public void insert(Answer answer) throws SQLException {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		try {
-			con = ConnectionManager.getConnection();
-			String sql = "INSERT INTO ANSWERS (writer, contents, createdDate, questionId) VALUES (?, ?, ?, ?)";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, answer.getWriter());
-			pstmt.setString(2, answer.getContents());
-			pstmt.setTimestamp(3, new Timestamp(answer.getTimeFromCreateDate()));
-			pstmt.setLong(4, answer.getQuestionId());
-			pstmt.executeUpdate();
-		} finally {
-			if (pstmt != null) {
-				pstmt.close();
-			}
-
-			if (con != null) {
-				con.close();
-			}
-		}		
+	public AnswerDao() {
+		jdbcTempate = new JdbcTemplate(ConnectionManager.getConnection());
 	}
 
-	public List<Answer> findAllByQuestionId(long questionId) throws SQLException {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			con = ConnectionManager.getConnection();
-			String sql = "SELECT answerId, writer, contents, createdDate FROM ANSWERS WHERE questionId = ? " + 
-					"order by answerId desc";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setLong(1, questionId);
+	public void insert(final Answer answer) throws SQLException {
+		String sql = "INSERT INTO ANSWERS (writer, contents, createdDate, questionId) VALUES (?, ?, ?, ?)";
 
-			rs = pstmt.executeQuery();
+		PreparedStatementSetter pss = new PreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement pstmt) throws SQLException {
+				pstmt.setString(1, answer.getWriter());
+				pstmt.setString(2, answer.getContents());
+				pstmt.setTimestamp(3, new Timestamp(answer.getTimeFromCreateDate()));
+				pstmt.setLong(4, answer.getQuestionId());
+			}
+		};
+		
+		jdbcTempate.update(sql, pss);
 
-			List<Answer> answers = new ArrayList<Answer>();
-			Answer answer = null;
-			while (rs.next()) {
-				answer = new Answer(
-						rs.getLong("answerId"),
-						rs.getString("writer"),
-						rs.getString("contents"),
-						rs.getTimestamp("createdDate"),
-						questionId);
-				answers.add(answer);
-			}
+		String countplussql = "update QUESTIONS set countOfComment = countOfComment + 1 where questionId = ?";
+		jdbcTempate.update(countplussql, answer.getQuestionId());
+	}
 
-			return answers;
-		} finally {
-			if (rs != null) {
-				rs.close();
+	public List<Answer> findAllByQuestionId(final long questionId)
+			throws SQLException {
+
+		String sql = "SELECT answerId, writer, contents, createdDate FROM ANSWERS WHERE questionId = ? "
+				+ "order by answerId desc";
+		
+		PreparedStatementSetter pss = new PreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement pstmt) throws SQLException {
+				pstmt.setLong(1, questionId);
 			}
-			if (pstmt != null) {
-				pstmt.close();
+		};
+		
+		RowMapper<Answer> rowMapper = new RowMapper<Answer>() {
+			@Override
+			public Answer mapRow(ResultSet rs) throws SQLException {
+				return new Answer(rs.getLong("answerId"),
+						rs.getString("writer"), rs.getString("contents"),
+						rs.getTimestamp("createdDate"), questionId);
 			}
-			if (con != null) {
-				con.close();
-			}
-		}
+			
+		};
+
+		return jdbcTempate.query(sql, rowMapper, pss);
 	}
 }
