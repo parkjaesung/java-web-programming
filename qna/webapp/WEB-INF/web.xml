@@ -10,8 +10,18 @@
 	</listener>
 
 	<listener>
-		<listener-class>next.support.init.QnaContextLoaderListender</listener-class>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>next.config.Config</param-value>
+	</context-param>
 
 
 	<filter>
