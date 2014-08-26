@@ -22,5 +22,4 @@ public class SaveController implements Controller {
 		questionDao.insert(question);
 		return "redirect:/list.next";
 	}
-
 }

@@ -18,7 +18,7 @@
 	<c:forEach items="${questions}" var="each">
 	  <div class="post">
 	      <h2 class="post-title">
-	          <a href="/show.do?questionId=${each.questionId}">${each.title}</a>
+	          <a href="/show.next?questionId=${each.questionId}">${each.title}</a>
 	      </h2>
 	      <div class="post-metadata">
 	          <span class="post-author">${each.writer}</span>

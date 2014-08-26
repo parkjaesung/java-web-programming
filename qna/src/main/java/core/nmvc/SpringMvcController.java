@@ -20,12 +20,15 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import core.mvc.SlippHandlerAdapter;
+
 public class SpringMvcController extends HttpServlet {
 	private static final long serialVersionUID = -5704524104722380068L;
 	private static final Logger logger = LoggerFactory.getLogger(SpringMvcController.class);
 	
 	private ConfigurableWebApplicationContext context;
 	private BeanNameUrlHandlerMapping handlerMapping;
+	private SlippHandlerAdapter handlerAdapter;
 	
 	@Override
 	public void init() throws ServletException {
@@ -37,6 +40,8 @@ public class SpringMvcController extends HttpServlet {
 		
 		handlerMapping = new BeanNameUrlHandlerMapping();
 		handlerMapping.setApplicationContext(context);
+		
+		handlerAdapter = new SlippHandlerAdapter();
 	}
 
 	@Override
@@ -48,8 +53,13 @@ public class SpringMvcController extends HttpServlet {
 			HandlerExecutionChain hec = handlerMapping.getHandler(request);
 			logger.debug("Handler : {}", hec.getHandler().getClass());
 			
-			Controller controller = (Controller)hec.getHandler();
-			ModelAndView mav = controller.handleRequest(request, response);
+			ModelAndView mav = null;
+			if (hec.getHandler() instanceof Controller) {
+				Controller controller = (Controller)hec.getHandler();
+				mav = controller.handleRequest(request, response);
+			} else {
+				mav = handlerAdapter.handle(request, response, hec.getHandler());
+			}
 			
 			InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
 			viewResolver.setApplicationContext(context);

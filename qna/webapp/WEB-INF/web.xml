@@ -34,17 +34,6 @@
 	</filter-mapping>
 
 	<servlet>
-		<display-name>FrontController</display-name>
-		<servlet-name>FrontController</servlet-name>
-		<servlet-class>core.mvc.FrontController</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>FrontController</servlet-name>
-		<url-pattern>*.next</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
 		<display-name>SpringMvcController</display-name>
 		<servlet-name>slipp</servlet-name>
 		<servlet-class>core.nmvc.SpringMvcController</servlet-class>
@@ -53,7 +42,7 @@
 
 	<servlet-mapping>
 		<servlet-name>slipp</servlet-name>
-		<url-pattern>*.do</url-pattern>
+		<url-pattern>*.next</url-pattern>
 	</servlet-mapping>
 	
 	<welcome-file-list>

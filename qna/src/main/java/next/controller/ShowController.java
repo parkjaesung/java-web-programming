@@ -27,6 +27,6 @@ public class ShowController implements Controller {
 		request.setAttribute("question", question);
 		request.setAttribute("answers", answers);
 		
-		return "show.jsp";
+		return "show";
 	}
 }
