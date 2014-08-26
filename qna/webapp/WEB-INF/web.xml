@@ -44,6 +44,17 @@
 		<url-pattern>*.next</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<display-name>SpringMvcController</display-name>
+		<servlet-name>SpringMvcController</servlet-name>
+		<servlet-class>core.mvc.SpringMvcController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>SpringMvcController</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+	
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
