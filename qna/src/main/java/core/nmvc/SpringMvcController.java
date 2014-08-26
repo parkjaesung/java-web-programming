@@ -1,6 +1,9 @@
 package core.nmvc;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,26 +12,26 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
+import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.HandlerExecutionChain;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
-import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-
-import core.mvc.SlippHandlerAdapter;
 
 public class SpringMvcController extends HttpServlet {
 	private static final long serialVersionUID = -5704524104722380068L;
 	private static final Logger logger = LoggerFactory.getLogger(SpringMvcController.class);
 	
 	private ConfigurableWebApplicationContext context;
-	private BeanNameUrlHandlerMapping handlerMapping;
-	private SlippHandlerAdapter handlerAdapter;
+	private HandlerMapping handlerMapping;
+	
+	private List<HandlerAdapter> handlerAdapters;
 	
 	@Override
 	public void init() throws ServletException {
@@ -38,10 +41,16 @@ public class SpringMvcController extends HttpServlet {
 		context.setServletConfig(getServletConfig());
 		context.refresh();
 		
-		handlerMapping = new BeanNameUrlHandlerMapping();
-		handlerMapping.setApplicationContext(context);
-		
-		handlerAdapter = new SlippHandlerAdapter();
+		handlerMapping = context.getBean(HandlerMapping.class);
+		initHandlerAdapters();
+	}
+	
+	private void initHandlerAdapters() {
+		Map<String, HandlerAdapter> matchingBeans =
+				BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerAdapter.class, true, false);
+		if (!matchingBeans.isEmpty()) {
+			this.handlerAdapters = new ArrayList<HandlerAdapter>(matchingBeans.values());
+		}
 	}
 
 	@Override
@@ -54,11 +63,10 @@ public class SpringMvcController extends HttpServlet {
 			logger.debug("Handler : {}", hec.getHandler().getClass());
 			
 			ModelAndView mav = null;
-			if (hec.getHandler() instanceof Controller) {
-				Controller controller = (Controller)hec.getHandler();
-				mav = controller.handleRequest(request, response);
-			} else {
-				mav = handlerAdapter.handle(request, response, hec.getHandler());
+			for (HandlerAdapter each : this.handlerAdapters) {
+				if (each.supports(hec.getHandler())) {
+					mav = each.handle(request, response, hec.getHandler());
+				}
 			}
 			
 			InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
