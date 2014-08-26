@@ -10,15 +10,15 @@ import next.dao.QuestionDao;
 import next.model.Answer;
 import next.model.Question;
 import core.mvc.Controller;
+import core.utils.ApplicationContextUtils;
 
 public class ShowController implements Controller {
-	private QuestionDao questionDao = new QuestionDao();
-	private AnswerDao answerDao = new AnswerDao();
-	
-	
 	@Override
 	public String execute(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+		QuestionDao questionDao = ApplicationContextUtils.getBean(request, QuestionDao.class);
+		AnswerDao answerDao = ApplicationContextUtils.getBean(request, AnswerDao.class);
+		
 		long questionId = Long.parseLong(request.getParameter("questionId"));
 		Question question;
 		List<Answer> answers;
