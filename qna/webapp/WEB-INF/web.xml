@@ -48,6 +48,7 @@
 		<display-name>SpringMvcController</display-name>
 		<servlet-name>slipp</servlet-name>
 		<servlet-class>core.nmvc.SpringMvcController</servlet-class>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
