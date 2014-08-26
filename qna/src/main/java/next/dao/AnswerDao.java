@@ -7,13 +7,19 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import next.model.Answer;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import core.jdbc.JdbcTemplate;
 import core.jdbc.PreparedStatementSetter;
 import core.jdbc.RowMapper;
 
+@Repository
 public class AnswerDao {
 	private JdbcTemplate jdbcTemplate;
 
+	@Autowired
 	public void setJdbcTemplate(JdbcTemplate jdbcTempate) {
 		this.jdbcTemplate = jdbcTempate;
 	}
