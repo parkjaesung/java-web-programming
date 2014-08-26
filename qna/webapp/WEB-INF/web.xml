@@ -47,7 +47,7 @@
 	<servlet>
 		<display-name>SpringMvcController</display-name>
 		<servlet-name>slipp</servlet-name>
-		<servlet-class>core.mvc.SpringMvcController</servlet-class>
+		<servlet-class>core.nmvc.SpringMvcController</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
