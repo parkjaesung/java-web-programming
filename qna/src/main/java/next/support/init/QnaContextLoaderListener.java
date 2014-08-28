@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
-public class QnaContextLoaderListender implements ServletContextListener {
+public class QnaContextLoaderListener implements ServletContextListener {
 	private static final Logger logger = LoggerFactory
-			.getLogger(QnaContextLoaderListender.class);
+			.getLogger(QnaContextLoaderListener.class);
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
