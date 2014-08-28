@@ -63,6 +63,6 @@ public class SpringMvcController extends HttpServlet {
 	}
 	
 	private String configPath() {
-		return "classpath:/" + getServletName() + "-servlet.xml"; 
+		return "WEB-INF/" + getServletName() + "-servlet.xml"; 
 	}
 }
