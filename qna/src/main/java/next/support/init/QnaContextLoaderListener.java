@@ -11,8 +11,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
-public class QnaContextLoaderListender implements ServletContextListener {
-	private static final Logger logger = LoggerFactory.getLogger(QnaContextLoaderListender.class);
+public class QnaContextLoaderListener implements ServletContextListener {
+	private static final Logger logger = LoggerFactory.getLogger(QnaContextLoaderListener.class);
 	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
