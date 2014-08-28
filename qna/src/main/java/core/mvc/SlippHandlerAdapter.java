@@ -7,7 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.LastModified;
+
+import core.nmvc.JsonView;
 
 public class SlippHandlerAdapter implements HandlerAdapter {
     @Override
@@ -19,11 +20,20 @@ public class SlippHandlerAdapter implements HandlerAdapter {
     public ModelAndView handle(HttpServletRequest request,
             HttpServletResponse response, Object handler) throws Exception {
         Object result = ((Controller) handler).execute(request, response);
+        
         if (!(result instanceof String)) {
-            throw new IllegalStateException("Controller 형식이 맞는지 확인해 주세요.");
+        	ModelAndView mav = new ModelAndView(new JsonView());
+        	mav.addObject(JsonView.DEFAULT_JSON_PARAM_KEY, result);
+            return mav;
         }
         
-        ModelAndView mav = new ModelAndView((String)result);
+        String viewName = (String)result;
+        
+        if (viewName.startsWith(Controller.DEFAULT_API_PREFIX)) {
+        	return new ModelAndView(new JsonView());
+        }
+        
+        ModelAndView mav = new ModelAndView(viewName);
         Enumeration<String> names = request.getAttributeNames();
         
         while (names.hasMoreElements()) {
@@ -35,9 +45,6 @@ public class SlippHandlerAdapter implements HandlerAdapter {
 
     @Override
     public long getLastModified(HttpServletRequest request, Object handler) {
-        if (handler instanceof LastModified) {
-            return ((LastModified) handler).getLastModified(request);
-        }
         return -1L;
     }
 }

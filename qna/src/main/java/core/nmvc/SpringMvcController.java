@@ -1,5 +1,6 @@
 package core.nmvc;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,12 @@ public class SpringMvcController extends HttpServlet {
 				}
 			}
 			
+			if (mav.getView() != null) {
+				View view = mav.getView();
+				view.render(mav.getModel(), request, response);
+				return;
+			}
+			
 			InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
 			viewResolver.setApplicationContext(context);
 			viewResolver.setSuffix(".jsp");
@@ -81,6 +88,6 @@ public class SpringMvcController extends HttpServlet {
 	}
 	
 	private String configPath() {
-		return "classpath:/" + getServletName() + "-servlet.xml"; 
+		return "WEB-INF" + File.separator + getServletName() + "-servlet.xml"; 
 	}
 }

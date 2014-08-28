@@ -19,7 +19,6 @@ public class FrontController extends HttpServlet {
 	private static final Logger logger = LoggerFactory.getLogger(FrontController.class);
 	
 	private static final String DEFAULT_REDIRECT_PREFIX = "redirect:";
-	private static final String DEFAULT_API_PREFIX = "api";
 	
 	private RequestMapping rm;
 
@@ -49,7 +48,7 @@ public class FrontController extends HttpServlet {
 		
 		if(viewName instanceof String) {
 			String str = (String)viewName;
-			if (str.startsWith(DEFAULT_API_PREFIX)) {
+			if (str.startsWith(Controller.DEFAULT_API_PREFIX)) {
 				return;
 			}
 			

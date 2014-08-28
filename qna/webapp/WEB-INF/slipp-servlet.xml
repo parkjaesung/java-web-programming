@@ -10,6 +10,9 @@
     <bean name="/form.next" class="core.mvc.ForwardController"
         c:forwardUrl="form"
     />	
+    
+    <bean name="/api/addanswer.next" class="next.api.controller.AddAnswerController" />
+    <bean name="/api/list.next" class="next.api.controller.ApiListController" />
 
 	<bean id="beanNameUrlHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" />
 	
