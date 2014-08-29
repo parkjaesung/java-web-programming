@@ -13,10 +13,4 @@
     
     <bean name="/api/addanswer.next" class="next.api.controller.AddAnswerController" />
     <bean name="/api/list.next" class="next.api.controller.ApiListController" />
-
-	<bean id="beanNameUrlHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" />
-	
-	<bean id="slippHandlerAdapter" class="core.mvc.SlippHandlerAdapter" />
-	
-	<bean id="simpleControllerHandlerAdapter" class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
 </beans>

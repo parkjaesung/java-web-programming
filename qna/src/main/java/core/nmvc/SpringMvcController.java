@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,26 +12,28 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.HandlerExecutionChain;
-import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
+import org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+
+import core.mvc.SlippHandlerAdapter;
 
 public class SpringMvcController extends HttpServlet {
 	private static final long serialVersionUID = -5704524104722380068L;
 	private static final Logger logger = LoggerFactory.getLogger(SpringMvcController.class);
 	
 	private ConfigurableWebApplicationContext context;
-	private HandlerMapping handlerMapping;
+	private BeanNameUrlHandlerMapping handlerMapping;
 	
-	private List<HandlerAdapter> handlerAdapters;
+	private List<HandlerAdapter> handlerAdapters = new ArrayList<HandlerAdapter>();
 	
 	@Override
 	public void init() throws ServletException {
@@ -42,16 +43,15 @@ public class SpringMvcController extends HttpServlet {
 		context.setServletConfig(getServletConfig());
 		context.refresh();
 		
-		handlerMapping = context.getBean(HandlerMapping.class);
+		handlerMapping = new BeanNameUrlHandlerMapping();
+		handlerMapping.setApplicationContext(context);
+		
 		initHandlerAdapters();
 	}
 	
 	private void initHandlerAdapters() {
-		Map<String, HandlerAdapter> matchingBeans =
-				BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerAdapter.class, true, false);
-		if (!matchingBeans.isEmpty()) {
-			this.handlerAdapters = new ArrayList<HandlerAdapter>(matchingBeans.values());
-		}
+		handlerAdapters.add(new SimpleControllerHandlerAdapter());
+		handlerAdapters.add(new SlippHandlerAdapter());
 	}
 
 	@Override
