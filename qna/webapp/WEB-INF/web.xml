@@ -32,19 +32,18 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>*.next</url-pattern>
 	</filter-mapping>
-
+	
 	<servlet>
-		<display-name>SpringMvcController</display-name>
 		<servlet-name>slipp</servlet-name>
-		<servlet-class>core.nmvc.SpringMvcController</servlet-class>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>slipp</servlet-name>
 		<url-pattern>*.next</url-pattern>
-	</servlet-mapping>
-	
+	</servlet-mapping>	
+
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>

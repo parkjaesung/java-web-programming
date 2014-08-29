@@ -1,5 +1,6 @@
 package core.nmvc;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -21,12 +22,23 @@ public class JsonView implements View {
 	@Override
 	public void render(Map<String, ?> model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+		if (model == null) {
+			render(response, "");
+			return;
+		}
+		
 		Object data = model.get(DEFAULT_JSON_PARAM_KEY);
 		if (data == null) {
+			render(response, "");
 			return;
 		}
 		Gson gson = new Gson();
 		String json = gson.toJson(data);
+		render(response, json);
+	}
+
+	private void render(HttpServletResponse response, String json)
+			throws IOException {
 		response.setCharacterEncoding("utf-8");
 		PrintWriter pw = response.getWriter();
 		pw.write(json);
