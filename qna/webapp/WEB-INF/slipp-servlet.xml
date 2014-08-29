@@ -12,6 +12,8 @@
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
 	
+	<mvc:annotation-driven />
+	
     <bean name="/show.next" class="next.controller.ShowController" />
     <bean name="/save.next" class="next.controller.SaveController" />
     <bean name="/form.next" class="core.mvc.ForwardController"
@@ -21,15 +23,5 @@
     <bean name="/api/addanswer.next" class="next.api.controller.AddAnswerController" />
     <bean name="/api/list.next" class="next.api.controller.ApiListController" />
     
-    <bean id="beanNameUrlHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"
-		p:order="1"
-    />
-    
-    <bean id="annotationHandlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"
-    	p:order="2" 
-    />
-    
-    <bean id="simpleHandlerAdapter" class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
-    <bean id="annotationHandlerAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
     <bean id="slippHandlerAdapter" class="core.mvc.SlippHandlerAdapter" />
 </beans>
