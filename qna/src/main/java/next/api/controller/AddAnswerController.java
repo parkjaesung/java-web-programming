@@ -5,22 +5,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import next.dao.AnswerDao;
 import next.model.Answer;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import core.mvc.Controller;
-import core.utils.ApplicationContextUtils;
 
 public class AddAnswerController implements Controller {
-
+	@Autowired
+	private AnswerDao answerDao;
+	
 	@Override
 	public String execute(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		AnswerDao dao = ApplicationContextUtils.getBean(request, AnswerDao.class);
-		
 		long questionId = Long.parseLong(request.getParameter("questionId"));
 		String writer = request.getParameter("writer");
 		String contents = request.getParameter("contents");
 		Answer answer = new Answer(writer, contents, questionId);
 
-		dao.insert(answer);
+		answerDao.insert(answer);
 
 		return Controller.DEFAULT_API_PREFIX;
 	}

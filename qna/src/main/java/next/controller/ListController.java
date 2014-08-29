@@ -8,17 +8,17 @@ import javax.servlet.http.HttpServletResponse;
 import next.dao.QuestionDao;
 import next.model.Question;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
-import core.utils.ApplicationContextUtils;
-
 public class ListController implements Controller {
+	@Autowired
+	private QuestionDao questionDao;
+	
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		QuestionDao questionDao = ApplicationContextUtils.getBean(request, QuestionDao.class);
-
 		List<Question> questions;
 		questions = questionDao.findAll();
 

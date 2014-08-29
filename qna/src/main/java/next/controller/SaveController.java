@@ -5,15 +5,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import next.dao.QuestionDao;
 import next.model.Question;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import core.mvc.Controller;
-import core.utils.ApplicationContextUtils;
 
 public class SaveController implements Controller {
+	@Autowired
+	private QuestionDao questionDao;
+	
 	@Override
 	public String execute(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		QuestionDao questionDao = ApplicationContextUtils.getBean(request, QuestionDao.class);
-		
 		String writer = request.getParameter("writer");
 		String title = request.getParameter("title");
 		String contents = request.getParameter("contents");
