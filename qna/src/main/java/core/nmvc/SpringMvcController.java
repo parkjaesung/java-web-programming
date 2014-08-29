@@ -24,8 +24,7 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.ViewResolver;
 
 public class SpringMvcController extends HttpServlet {
 	private static final long serialVersionUID = -5704524104722380068L;
@@ -35,6 +34,9 @@ public class SpringMvcController extends HttpServlet {
 	
 	private List<HandlerMapping> handlerMappings = new ArrayList<HandlerMapping>();
 	private List<HandlerAdapter> handlerAdapters = new ArrayList<HandlerAdapter>();
+	
+	private ViewResolver viewResolver;
+	private LocaleResolver localeResolver;
 	
 	@Override
 	public void init() throws ServletException {
@@ -47,6 +49,9 @@ public class SpringMvcController extends HttpServlet {
 		
 		initHandlerMapping();
 		initHandlerAdapters();
+		
+		viewResolver = context.getBean(ViewResolver.class);
+		localeResolver = context.getBean(LocaleResolver.class);
 	}
 	
 	private void initHandlerMapping() {
@@ -86,21 +91,22 @@ public class SpringMvcController extends HttpServlet {
 				}
 			}
 			
-			if (mav.getView() != null) {
-				View view = mav.getView();
-				view.render(mav.getModel(), request, response);
-				return;
-			}
-			
-			InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-			viewResolver.setApplicationContext(context);
-			viewResolver.setSuffix(".jsp");
-			LocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
-			View view = viewResolver.resolveViewName(mav.getViewName(), localeResolver.resolveLocale(request));
-			view.render(mav.getModel(), request, response);
+			renderView(request, response, mav);
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}
+	}
+
+	private void renderView(HttpServletRequest request,
+			HttpServletResponse response, ModelAndView mav) throws Exception {
+		if (mav.getView() != null) {
+			View view = mav.getView();
+			view.render(mav.getModel(), request, response);
+			return;
+		}
+		
+		View view = viewResolver.resolveViewName(mav.getViewName(), localeResolver.resolveLocale(request));
+		view.render(mav.getModel(), request, response);
 	}
 	
 	private String configPath() {

@@ -24,4 +24,10 @@
     <bean name="/api/list.next" class="next.api.controller.ApiListController" />
     
     <bean id="slippHandlerAdapter" class="core.mvc.SlippHandlerAdapter" />
+    
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+    	p:suffix=".jsp"
+    />
+    
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver" />
 </beans>
