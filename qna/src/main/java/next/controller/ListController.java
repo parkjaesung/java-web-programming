@@ -9,14 +9,16 @@ import next.dao.QuestionDao;
 import next.model.Question;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
-public class ListController implements Controller {
+@Controller
+public class ListController {
 	@Autowired
 	private QuestionDao questionDao;
 	
-	@Override
+	@RequestMapping("/list.next")
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		List<Question> questions;

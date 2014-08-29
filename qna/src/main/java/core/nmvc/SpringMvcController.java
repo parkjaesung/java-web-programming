@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.core.OrderComparator;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.context.support.XmlWebApplicationContext;
@@ -31,8 +32,8 @@ public class SpringMvcController extends HttpServlet {
 	private static final Logger logger = LoggerFactory.getLogger(SpringMvcController.class);
 	
 	private ConfigurableWebApplicationContext context;
-	private HandlerMapping handlerMapping;
 	
+	private List<HandlerMapping> handlerMappings = new ArrayList<HandlerMapping>();
 	private List<HandlerAdapter> handlerAdapters = new ArrayList<HandlerAdapter>();
 	
 	@Override
@@ -44,9 +45,15 @@ public class SpringMvcController extends HttpServlet {
 		context.setServletConfig(getServletConfig());
 		context.refresh();
 		
-		handlerMapping = context.getBean(HandlerMapping.class);
-		
+		initHandlerMapping();
 		initHandlerAdapters();
+	}
+	
+	private void initHandlerMapping() {
+		Map<String, HandlerMapping> matchingBeans =
+		        BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerMapping.class, true, false);
+		handlerMappings.addAll(matchingBeans.values());
+		OrderComparator.sort(this.handlerMappings);
 	}
 	
 	private void initHandlerAdapters() {
@@ -61,7 +68,15 @@ public class SpringMvcController extends HttpServlet {
 		logger.debug("Method : {}, Request URI : {}", request.getMethod(), request.getRequestURI());
 		
 		try {
-			HandlerExecutionChain hec = handlerMapping.getHandler(request);
+			HandlerExecutionChain hec = null;
+			for (HandlerMapping handlerMapping : handlerMappings) {
+				logger.debug("Using HandlerMapping : {}", handlerMapping);
+				hec = handlerMapping.getHandler(request);
+				if (hec != null) {
+					break;
+				}
+			}
+			
 			logger.debug("Handler : {}", hec.getHandler().getClass());
 			
 			ModelAndView mav = null;
@@ -84,7 +99,7 @@ public class SpringMvcController extends HttpServlet {
 			View view = viewResolver.resolveViewName(mav.getViewName(), localeResolver.resolveLocale(request));
 			view.render(mav.getModel(), request, response);
 		} catch (Exception e) {
-			throw new ServletException(e.getMessage());
+			throw new ServletException(e);
 		}
 	}
 	
