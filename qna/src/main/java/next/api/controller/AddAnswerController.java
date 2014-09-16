@@ -4,12 +4,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import next.dao.AnswerDao;
+import next.dao.QuestionDao;
 import next.model.Answer;
 import core.mvc.Controller;
 
 public class AddAnswerController implements Controller {
 
-	AnswerDao dao = new AnswerDao();
+	AnswerDao answerDao = new AnswerDao();
+	QuestionDao questionDao = new QuestionDao();
 
 	@Override
 	public String execute(HttpServletRequest request,
@@ -19,7 +21,8 @@ public class AddAnswerController implements Controller {
 		String contents = request.getParameter("contents");
 		Answer answer = new Answer(writer, contents, questionId);
 
-		dao.insert(answer);
+		answerDao.insert(answer);
+		questionDao.updateCommentCount(questionId);
 
 		return "api";
 	}
