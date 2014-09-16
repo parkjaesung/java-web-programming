@@ -17,7 +17,7 @@ import core.jdbc.RowMapper;
 @Repository
 public class QuestionDao {
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Autowired
 	public void setJdbcTemplate(JdbcTemplate jdbcTempate) {
 		this.jdbcTemplate = jdbcTempate;
@@ -31,7 +31,8 @@ public class QuestionDao {
 				pstmt.setString(1, question.getWriter());
 				pstmt.setString(2, question.getTitle());
 				pstmt.setString(3, question.getContents());
-				pstmt.setTimestamp(4, new Timestamp(question.getTimeFromCreateDate()));
+				pstmt.setTimestamp(4,
+						new Timestamp(question.getTimeFromCreateDate()));
 				pstmt.setInt(5, question.getCountOfComment());
 			}
 		};
@@ -46,19 +47,19 @@ public class QuestionDao {
 			@Override
 			public Question mapRow(ResultSet rs) throws SQLException {
 				return new Question(rs.getLong("questionId"),
-						rs.getString("writer"), rs.getString("title"),
-						null, rs.getTimestamp("createdDate"),
+						rs.getString("writer"), rs.getString("title"), null,
+						rs.getTimestamp("createdDate"),
 						rs.getInt("countOfComment"));
 			}
 		};
-		
+
 		return jdbcTemplate.query(sql, rowMapper);
 	}
 
 	public Question findById(final long questionId) throws SQLException {
 		String sql = "SELECT questionId, writer, title, contents, createdDate, countOfComment FROM QUESTIONS "
 				+ "WHERE questionId = ?";
-		
+
 		PreparedStatementSetter pss = new PreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement pstmt) throws SQLException {
@@ -76,7 +77,12 @@ public class QuestionDao {
 						rs.getInt("countOfComment"));
 			}
 		};
-		
+
 		return jdbcTemplate.queryById(sql, rowMapper, pss);
+	}
+
+	public void updateCommentCount(final long questionId) throws SQLException {
+		String countplussql = "update QUESTIONS set countOfComment = countOfComment + 1 where questionId = ?";
+		jdbcTemplate.update(countplussql, questionId);
 	}
 }
