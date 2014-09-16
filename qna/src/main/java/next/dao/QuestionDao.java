@@ -13,10 +13,10 @@ import core.jdbc.PreparedStatementSetter;
 import core.jdbc.RowMapper;
 
 public class QuestionDao {
-	private JdbcTemplate jdbcTempate;
+	private JdbcTemplate jdbcTemplate;
 
 	public QuestionDao() {
-		jdbcTempate = new JdbcTemplate(ConnectionManager.getConnection());
+		jdbcTemplate = new JdbcTemplate(ConnectionManager.getConnection());
 	}
 
 	public void insert(final Question question) throws SQLException {
@@ -31,7 +31,7 @@ public class QuestionDao {
 				pstmt.setInt(5, question.getCountOfComment());
 			}
 		};
-		jdbcTempate.update(sql, pss);
+		jdbcTemplate.update(sql, pss);
 	}
 
 	public List<Question> findAll() throws SQLException {
@@ -48,7 +48,7 @@ public class QuestionDao {
 			}
 		};
 		
-		return jdbcTempate.query(sql, rowMapper);
+		return jdbcTemplate.query(sql, rowMapper);
 	}
 
 	public Question findById(final long questionId) throws SQLException {
@@ -73,11 +73,11 @@ public class QuestionDao {
 			}
 		};
 		
-		return jdbcTempate.queryById(sql, rowMapper, pss);
+		return jdbcTemplate.queryById(sql, rowMapper, pss);
 	}
 	
 	public void updateCommentCount(final long questionId) throws SQLException {
 		String countplussql = "update QUESTIONS set countOfComment = countOfComment + 1 where questionId = ?";
-		jdbcTempate.update(countplussql, questionId);
+		jdbcTemplate.update(countplussql, questionId);
 	}
 }
