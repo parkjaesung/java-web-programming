@@ -79,4 +79,9 @@ public class QuestionDao {
 		
 		return jdbcTemplate.queryById(sql, rowMapper, pss);
 	}
+	
+	public void updateCommentCount(final long questionId) throws SQLException {
+		String countplussql = "update QUESTIONS set countOfComment = countOfComment + 1 where questionId = ?";
+		jdbcTemplate.update(countplussql, questionId);
+	}
 }

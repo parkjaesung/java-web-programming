@@ -38,9 +38,6 @@ public class AnswerDao {
 		};
 		
 		jdbcTemplate.update(sql, pss);
-
-		String countplussql = "update QUESTIONS set countOfComment = countOfComment + 1 where questionId = ?";
-		jdbcTemplate.update(countplussql, answer.getQuestionId());
 	}
 
 	public List<Answer> findAllByQuestionId(final long questionId)
