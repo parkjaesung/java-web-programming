@@ -11,7 +11,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 @Configuration
-@ComponentScan(basePackages={"next.dao", "core"})
+@ComponentScan(basePackages={"next", "core"})
 @PropertySource(value="classpath:application-properties.xml")
 public class Config {
 	@Resource
