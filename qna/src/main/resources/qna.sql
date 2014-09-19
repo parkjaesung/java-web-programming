@@ -1,3 +1,10 @@
+DROP TABLE IF EXISTS LOGINFO;
+
+CREATE TABLE LOGINFO ( 
+	message         varchar(30)			NOT NULL, 
+	createdDate		timestamp			NOT NULL,	
+);
+
 DROP TABLE IF EXISTS QUESTIONS;
 
 CREATE TABLE QUESTIONS (
