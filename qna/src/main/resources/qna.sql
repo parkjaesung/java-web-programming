@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS LOGINFO;
 
 CREATE TABLE LOGINFO ( 
+	writer			varchar(30)			NOT NULL,
 	message         varchar(30)			NOT NULL, 
 	createdDate		timestamp			NOT NULL,	
 );

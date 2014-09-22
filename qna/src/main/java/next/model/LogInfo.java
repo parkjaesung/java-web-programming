@@ -6,6 +6,8 @@ import org.apache.ibatis.type.Alias;
 
 @Alias("loginfo")
 public class LogInfo {
+	private String writer;
+	
 	private String message;
 	
 	private Date createdDate;
@@ -13,10 +15,14 @@ public class LogInfo {
 	public LogInfo() {
 	}
 
-	public LogInfo(String message, Date createdDate) {
-		super();
+	public LogInfo(String writer, String message, Date createdDate) {
+		this.writer = writer;
 		this.message = message;
 		this.createdDate = createdDate;
+	}
+	
+	public String getWriter() {
+		return writer;
 	}
 
 	public String getMessage() {
@@ -42,6 +48,7 @@ public class LogInfo {
 		result = prime * result
 				+ ((createdDate == null) ? 0 : createdDate.hashCode());
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = prime * result + ((writer == null) ? 0 : writer.hashCode());
 		return result;
 	}
 
@@ -64,6 +71,17 @@ public class LogInfo {
 				return false;
 		} else if (!message.equals(other.message))
 			return false;
+		if (writer == null) {
+			if (other.writer != null)
+				return false;
+		} else if (!writer.equals(other.writer))
+			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "LogInfo [writer=" + writer + ", message=" + message
+				+ ", createdDate=" + createdDate + "]";
 	}
 }

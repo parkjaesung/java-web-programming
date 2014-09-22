@@ -1,5 +1,7 @@
 package next.dao;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import next.model.LogInfo;
@@ -18,5 +20,9 @@ public class LogInfoDao {
 	
 	public void create(LogInfo logInfo) {
 		sqlSession.insert("LogInfo.create", logInfo);
+	}
+	
+	public List<LogInfo> findAll() {
+		return sqlSession.selectList("LogInfo.findAll");
 	}
 }

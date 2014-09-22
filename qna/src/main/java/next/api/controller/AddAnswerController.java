@@ -28,7 +28,7 @@ public class AddAnswerController implements Controller {
 
 		answerDao.insert(answer);
 		questionDao.updateCommentCount(questionId);
-
+		
 		return Controller.DEFAULT_API_PREFIX;
 	}
 
